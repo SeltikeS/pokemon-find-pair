@@ -1,0 +1,59 @@
+:host {
+  $content-size: 6.25rem;
+  $card-offset: 1rem;
+  $label-font-size: 1rem;
+  $card-size: $content-size + 2 * $card-offset + .125rem;
+
+  .card {
+    &-container {
+      align-items: center;
+      justify-content: space-between;
+      display: flex;
+      flex-flow: column;
+
+      border: 2px solid var(--blue);
+      border-radius: 1rem;
+      padding: $card-offset;
+      height: $card-size + 2rem;
+      width: $card-size;
+
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    &-label {
+      font-size: $label-font-size;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin-bottom: $card-offset;
+    }
+
+    &-image {
+      max-width: $content-size;
+      max-height: $content-size;
+
+      &-container {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        width: $content-size;
+        height: $content-size;
+      }
+    }
+  }
+
+  .face {
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    display: flex;
+    position: absolute;
+    top: $card-offset;
+    left: $card-offset;
+    backface-visibility: hidden;
+  }
+
+  .front {
+    transform: rotateY(180deg);
+}
+}

@@ -6,6 +6,9 @@ import { MainModule } from './pages/main/main.module';
 import { PlaygroundModule } from './pages/playground/playground.module';
 import { SettingsModule } from './pages/settings/settings.module';
 import { AppComponent } from './app.component';
+import { HttpClientModule } from '@angular/common/http'
+import { PokemonService } from './shared/services/pokemon.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -13,12 +16,14 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     MainModule,
     PlaygroundModule,
     SettingsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [PokemonService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
