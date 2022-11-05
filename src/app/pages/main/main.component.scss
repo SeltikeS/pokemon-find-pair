@@ -1,0 +1,51 @@
+:host {
+  .main {
+    &-container {
+      background: url('/src/assets/images/pokemon.jpg') no-repeat center;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-flow: column;
+      height: 100%;
+      width: 100%;
+    }
+
+    &-buttons {
+      display: flex;
+      gap: 10rem;
+    }
+
+    &-button {
+      font-size: 1.5rem;
+      line-height:  110%;
+      font-weight: 600;
+      font-family: 'Bungee', cursive;
+      padding: 0.5rem 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2rem;
+
+      background: var(--beige);
+      color: var(--blue);
+      border: 0.15rem solid var(--blue);
+
+      opacity: 0.9;
+      cursor: pointer;
+      transition: 0.3s linear;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &-label {
+      font-size: 5rem;
+      line-height:  110%;
+      font-family: 'Bungee', cursive;
+      letter-spacing: 0.75rem;
+
+      color: var(--yellow);
+      text-shadow: 0.5rem 0 var(--blue), -0.5rem 0 var(--blue), 0 0.5rem var(--blue), 0 -0.5rem var(--blue),
+               0.25rem 0.25rem var(--blue), -0.25rem -0.25rem var(--blue), 0.25rem -0.25rem var(--blue), -0.25rem 0.25rem var(--blue);
+    }
+  }
+}
