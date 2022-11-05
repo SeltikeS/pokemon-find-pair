@@ -1,8 +1,43 @@
 :host {
-  .container {
-    background: #fff;
-    height: 100%;
-    width: 100%;
-    z-index: 10;
+  .play {
+    &-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    &-wrapper {
+      height: 60%;
+      width: 60%;
+    }
+
+    &-header {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    &-menu {
+      font-size: 1rem;
+      line-height:  110%;
+      font-weight: 600;
+      font-family: 'Bungee', cursive;
+      padding: 0.5rem 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2rem;
+
+      background: var(--white);
+      color: var(--blue);
+      border: 0.15rem solid var(--blue);
+
+      opacity: 0.9;
+      cursor: pointer;
+      transition: 0.3s linear;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }
