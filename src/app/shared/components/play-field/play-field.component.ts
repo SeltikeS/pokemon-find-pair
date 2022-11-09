@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ICardData } from 'src/app/entities/interfaces/card-data.interface';
 import { CardService } from '../../services/card.service';
 
@@ -9,22 +10,16 @@ import { CardService } from '../../services/card.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlayFieldComponent implements OnInit {
-  public cardInfo: ICardData = {
-    name: 'Pokemon',
-    image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png',
-    state: 'default',
-  };
+  public deck$: Observable<ICardData[]> = new Observable<ICardData[]>;
 
   constructor(private cardService: CardService) { }
 
   ngOnInit(): void {
+    this.deck$ = this.cardService.getDeck();
+    this.newGame();
   }
 
-  public getCard() {
-    this.cardService.getPokemonCard().subscribe(
-      (data) => {
-        this.cardInfo = data as ICardData;
-      }
-    );
+  public newGame() {
+    this.cardService.newDeck();
   }
 }
