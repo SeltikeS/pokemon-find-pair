@@ -1,14 +1,20 @@
-<div class="card-container" (click)="cardClicked()" [@cardFlip]="data.state">
+<div
+  *ngIf="card"
+  class="card-container"
+  [ngStyle]="{ visibility: card.state === 'founded' ? 'hidden' : 'visible' }"
+  (click)="cardClicked()"
+  [@cardFlip]="card.state"
+>
   <div class="face front">
-    <label  class="card-label">{{ data.name | titlecase }}</label>
+    <label class="card-label">{{ card.name | titlecase }}</label>
     <div class="card-image-container">
-      <img class="card-image" [src]="data.image" alt="pokemon_img">
+      <img class="card-image" [src]="card.image" alt="pokemon_img" />
     </div>
   </div>
   <div class="face back">
-    <label  class="card-label">{{ backsideData.name | titlecase }}</label>
+    <label class="card-label">{{ backsideData.name | titlecase }}</label>
     <div class="card-image-container">
-      <img class="card-image" [src]="backsideData.image" alt="pokemon_img">
+      <img class="card-image" [src]="backsideData.image" alt="pokemon_img" />
     </div>
   </div>
 </div>

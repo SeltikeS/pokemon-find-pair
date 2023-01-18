@@ -1,64 +1,63 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, range, repeat, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, map, mergeMap, Observable, range, tap } from 'rxjs';
 import { ICardData } from 'src/app/entities/interfaces/card-data.interface';
 import { PokemonService } from './pokemon.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CardsUtil } from '../utils/cards.util';
 
+@UntilDestroy()
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CardService {
-  private deckSize: number = 6;
-  private deck$ = new BehaviorSubject<ICardData[]>([]);
+  private deckSize = 6;
+  private deck$: BehaviorSubject<ICardData[]> = new BehaviorSubject<ICardData[]>([]);
 
-  constructor(private pokemonService: PokemonService) {}
+  constructor(private pokemonService: PokemonService) {
+    this.newDeck();
+  }
 
   public newDeck(): void {
     const newDeck: ICardData[] = [];
 
-    of(5)
+    range(0, this.deckSize)
       .pipe(
-        switchMap(() => {
-          return this.getPokemonCard();
-        }),
-        repeat(this.deckSize),
-        tap((card) => {
-          newDeck.push(card);
-          newDeck.push(card);
-        }),
+        mergeMap(() => this.getPokemonCard()),
+        tap((card: ICardData) => newDeck.push(card)),
+        untilDestroyed(this),
       )
-      .subscribe(() => {
-        this.deck$.next(this.shuffle(newDeck));
+      .subscribe({
+        complete: () => {
+          this.deck$.next(CardsUtil.shuffle([...newDeck, ...newDeck]));
+        },
       });
   }
 
   public getPokemonCard(): Observable<ICardData> {
     return this.pokemonService.getPokemonById(this.getRandomInt()).pipe(
-      switchMap((data) =>  of({
-        name: data.name,
-        image: data.sprites.other.dream_world.front_default,
-        state: 'default',
-      })),
-    ) as Observable<ICardData>;
+      map((data) => {
+        return {
+          name: data.name,
+          image: data.sprites.other.dream_world.front_default,
+          state: 'default',
+        } as ICardData;
+      }),
+    );
   }
 
   public getDeck(): Observable<ICardData[]> {
-    return this.deck$;
+    return this.deck$.asObservable();
+  }
+
+  public updateCard(index: number, state: ICardData): Observable<void> {
+    const newState: ICardData[] = this.deck$.value;
+    newState[index] = state;
+    this.deck$.next(newState);
+
+    return EMPTY;
   }
 
   private getRandomInt(): number {
     return Math.floor(Math.random() * this.pokemonService.pokemonsNumber);
-  }
-
-  private shuffle(array: ICardData[]): ICardData[] {
-    let currentIndex = array.length,  randomIndex;
-
-    while (currentIndex != 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
   }
 }
