@@ -4,6 +4,8 @@
     [card]="card"
     [index]="i"
   ></app-play-card>
+
+  <div *ngIf="isGameWinner$ | async" class="play-win">You WIN!!!</div>
 </div>
 <div class="play-new">
   <button class="play-button" (click)="newGame()">New Game</button>

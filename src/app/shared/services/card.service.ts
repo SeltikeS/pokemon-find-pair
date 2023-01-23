@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, map, mergeMap, Observable, range, tap } from 'rxjs';
+import { BehaviorSubject, map, mergeMap, Observable, of, range, tap } from 'rxjs';
 import { ICardData } from 'src/app/entities/interfaces/card-data.interface';
 import { PokemonService } from './pokemon.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -11,13 +11,19 @@ import { CardsUtil } from '../utils/cards.util';
 })
 export class CardService {
   private deckSize = 6;
-  private deck$: BehaviorSubject<ICardData[]> = new BehaviorSubject<ICardData[]>([]);
+  private deck$ = new BehaviorSubject<ICardData[]>([]);
+  private isGameWinner$ = new BehaviorSubject<boolean>(false);
+
+  public get deck(): ICardData[] {
+    return this.deck$.value;
+  }
 
   constructor(private pokemonService: PokemonService) {
     this.newDeck();
   }
 
   public newDeck(): void {
+    this.isGameWinner$.next(false);
     const newDeck: ICardData[] = [];
 
     range(0, this.deckSize)
@@ -49,12 +55,52 @@ export class CardService {
     return this.deck$.asObservable();
   }
 
-  public updateCard(index: number, state: ICardData): Observable<void> {
-    const newState: ICardData[] = this.deck$.value;
+  public updateCard(index: number, state: ICardData): Observable<ICardData[]> {
+    const newState: ICardData[] = this.deck;
     newState[index] = state;
     this.deck$.next(newState);
+    this.checkDeck();
 
-    return EMPTY;
+    return of(newState);
+  }
+
+  public checkDeck(): Observable<ICardData[]> {
+    let newDeck = this.deck;
+    const flippedCards: ICardData[] = this.deck.filter(
+      (card: ICardData) => card.state === 'flipped',
+    );
+    if (flippedCards.length >= 2) {
+      setTimeout(() => {
+        if (flippedCards[0].name === flippedCards[1].name) {
+          newDeck = newDeck.map((card: ICardData) => {
+            return {
+              ...card,
+              state:
+                card.name === flippedCards[0].name || card.state === 'founded'
+                  ? 'founded'
+                  : 'default',
+            };
+          });
+        } else {
+          newDeck = newDeck.map((card: ICardData) => {
+            return {
+              ...card,
+              state: card.state === 'founded' ? 'founded' : 'default',
+            };
+          });
+        }
+        this.deck$.next(newDeck);
+        if (!newDeck.find((card) => card.state === 'default')) {
+          this.isGameWinner$.next(true);
+        }
+      }, 500);
+    }
+
+    return of(newDeck);
+  }
+
+  public getGameWinner(): Observable<boolean> {
+    return this.isGameWinner$.asObservable();
   }
 
   private getRandomInt(): number {
