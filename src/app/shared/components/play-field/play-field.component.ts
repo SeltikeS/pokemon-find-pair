@@ -13,19 +13,21 @@ import { CardService } from '../../services/card.service';
 })
 export class PlayFieldComponent implements OnInit {
   public deck$ = new Observable<ICardData[]>();
+  public isGameWinner$ = new Observable<boolean>();
   public deckState: ICardData[] = [];
 
   constructor(private cardService: CardService) {}
 
   public ngOnInit(): void {
     this.deck$ = this.cardService.getDeck();
+    this.isGameWinner$ = this.cardService.getGameWinner();
   }
 
   public newGame(): void {
     this.cardService.newDeck();
   }
 
-  public trackByFn(index: number, card: ICardData) {
-    return card.name;
+  public trackByFn(index: number) {
+    return index;
   }
 }

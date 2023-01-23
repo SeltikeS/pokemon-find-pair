@@ -1,8 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ICardData } from 'src/app/entities/interfaces/card-data.interface';
 import { CardService } from '../../services/card.service';
+import { switchMap } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -29,7 +30,7 @@ import { CardService } from '../../services/card.service';
     ]),
   ],
 })
-export class PlayCardComponent implements OnInit {
+export class PlayCardComponent {
   @Input() public card!: ICardData;
   @Input() public index: number = 0;
 
@@ -41,15 +42,16 @@ export class PlayCardComponent implements OnInit {
 
   constructor(private cardService: CardService) {}
 
-  public ngOnInit(): void {}
-
   public cardClicked() {
     this.cardService
       .updateCard(this.index, {
         ...this.card,
         state: this.card.state === 'default' ? 'flipped' : 'default',
       })
-      .pipe(untilDestroyed(this))
+      .pipe(
+        switchMap(() => this.cardService.checkDeck()),
+        untilDestroyed(this),
+      )
       .subscribe();
   }
 }
