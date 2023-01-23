@@ -1,2 +1,10 @@
-<button (click)="getCard()">New Card</button>
-<app-play-card [data]="cardInfo"></app-play-card>
+<div class="play-cards">
+  <app-play-card
+    *ngFor="let card of deck$ | async; let i = index; trackBy: trackByFn"
+    [card]="card"
+    [index]="i"
+  ></app-play-card>
+</div>
+<div class="play-new">
+  <button class="play-button" (click)="newGame()">New Game</button>
+</div>
