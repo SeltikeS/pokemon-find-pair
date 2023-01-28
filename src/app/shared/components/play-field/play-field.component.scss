@@ -4,7 +4,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       justify-items: center;
-      row-gap: 1rem;
+      gap: 1rem;
       padding: 2rem;
       position: relative;
     }
@@ -43,6 +43,13 @@
       transform: translate(-50%, -50%);
       font-size: 48px;
       font-weight: 600;
+    }
+  }
+
+  .play {
+    &-cards {
+      gap: 0.5rem;
+      padding: 1rem;
     }
   }
 }

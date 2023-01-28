@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "auto-clicker": {
+    "pokemon-find-pair": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -25,7 +25,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/auto-clicker",
+            "outputPath": "dist/pokemon-find-pair",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -47,6 +47,7 @@
           },
           "configurations": {
             "production": {
+              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -82,10 +83,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "auto-clicker:build:production"
+              "browserTarget": "pokemon-find-pair:build:production"
             },
             "development": {
-              "browserTarget": "auto-clicker:build:development"
+              "browserTarget": "pokemon-find-pair:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -93,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "auto-clicker:build"
+            "browserTarget": "pokemon-find-pair:build"
           }
         },
         "test": {

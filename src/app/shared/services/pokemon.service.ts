@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PokemonService implements OnInit {
-  private url = 'https://pokeapi.co/api/v2/';
+  private url = environment.apiBaseUrl;
   public pokemonsNumber = 500;
 
   constructor(private http: HttpClient) {}
